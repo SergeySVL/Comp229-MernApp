@@ -4,11 +4,10 @@
 import mongoose from 'mongoose';
 
 import express from 'express';
-import homeRoutes from './routes/home-routes.js';
-import aboutRoutes from './routes/about-routes.js';
-import contactRoutes from './routes/contact-routes.js';
+
 import projectsRoutes from './routes/projects-routes.js';
-import servicesRoutes from './routes/services-routes.js';
+import userRoutes from './routes/user-routes.js';
+
 
 // establishing a DB connection
 mongoose.connect("mongodb://localhost:27017/mern-portfolio-class");
@@ -29,11 +28,8 @@ app.use(express.json());
 // moving this into separate files in routes and controllers
 // app.use("/", (req, res) => { res.send("Hello World"); });
 
-app.use('/home', homeRoutes);
-app.use('/about', aboutRoutes);
-app.use('/contact', contactRoutes);
 app.use('/projects', projectsRoutes);
-app.use('/services', servicesRoutes);
+app.use('/users', userRoutes);
 
 app.listen(3001);
 
