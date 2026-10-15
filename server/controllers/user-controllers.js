@@ -1,5 +1,6 @@
 
 import userModel from "../models/user-model.js";
+import generateToken from "../utils/jwt.js";
 
 // CRUD - Create, Read, Update, Delete
 // this is Read - all user because of find() without arguments
@@ -26,7 +27,10 @@ export const createUser = async (req, res) => {
     try {
         const newUser = new userModel(req.body);
         const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+
+        const token = generateToken(savedUser);
+        console.log(savedUser, token);
+        res.status(201).json({ user: savedUser, token });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -65,7 +69,7 @@ export const deleteUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await userModel.find({ email });
+        const user = await userModel.findOne({ email });
         if(!user) {
             return res.status(404).message({ message: "User not found." })
         }
@@ -75,8 +79,10 @@ export const loginUser = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials." });
 
         }
-        res.status(200).json({ message: "Login Successfull." });
 
+        const token = generateToken(user);
+
+        res.status(200).json({ message: "Login Successfull.", token });
         } catch (error) {
             res.status(500),json({ message: error.message });
     }
